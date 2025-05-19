@@ -1,11 +1,4 @@
 import React from 'react';
-import {
-  Container,
-  Typography,
-  Paper,
-  Box
-} from '@mui/material';
-import PowerBIEmbedSimple from '../components/PowerBIEmbed';
 
 function Dashboard() {
   const isAuth = localStorage.getItem('auth');
@@ -17,21 +10,18 @@ function Dashboard() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 6 }}>
-      <Paper elevation={3} sx={{ padding: 4 }}>
-        <Typography variant="h4" fontWeight="bold" textAlign="center" gutterBottom>
-          Dashboard Power BI
-        </Typography>
-
-        <Typography variant="subtitle1" textAlign="center" mb={4}>
-          Rol actual: <strong>{role}</strong>
-        </Typography>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <PowerBIEmbedSimple />
-        </Box>
-      </Paper>
-    </Container>
+    <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }}>
+      <iframe
+        title="Dashboard Power BI"
+        src="https://app.powerbi.com/reportEmbed?reportId=490da354-b4f4-4ef3-947f-50d678ff261d&autoAuth=true&ctid=344979d0-d31d-4c57-8ba0-491aff4acaed"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none'
+        }}
+        allowFullScreen
+      />
+    </div>
   );
 }
 
