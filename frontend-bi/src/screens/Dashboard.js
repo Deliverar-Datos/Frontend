@@ -1,7 +1,15 @@
 import React from 'react';
+import {
+  Container,
+  Typography,
+  Paper,
+  Box
+} from '@mui/material';
+import PowerBIEmbedSimple from '../components/PowerBIEmbed';
 
 function Dashboard() {
   const isAuth = localStorage.getItem('auth');
+  const role = localStorage.getItem('role');
 
   if (!isAuth) {
     window.location.href = '/';
@@ -9,17 +17,21 @@ function Dashboard() {
   }
 
   return (
-    <div>
-      <h2>Tablero Power BI</h2>
-      <iframe
-        title="Power BI"
-        width="1000"
-        height="600"
-        src="https://app.powerbi.com/view?r=TU_URL_PUBLICA_DEL_TABLERO"
-        frameBorder="0"
-        allowFullScreen
-      />
-    </div>
+    <Container maxWidth="lg" sx={{ mt: 6 }}>
+      <Paper elevation={3} sx={{ padding: 4 }}>
+        <Typography variant="h4" fontWeight="bold" textAlign="center" gutterBottom>
+          Dashboard Power BI
+        </Typography>
+
+        <Typography variant="subtitle1" textAlign="center" mb={4}>
+          Rol actual: <strong>{role}</strong>
+        </Typography>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <PowerBIEmbedSimple />
+        </Box>
+      </Paper>
+    </Container>
   );
 }
 
