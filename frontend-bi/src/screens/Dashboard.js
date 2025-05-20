@@ -13,7 +13,7 @@ function Dashboard() {
     <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }}>
       <iframe
         title="Dashboard Power BI"
-        src="https://app.powerbi.com/reportEmbed?reportId=490da354-b4f4-4ef3-947f-50d678ff261d&autoAuth=true&ctid=344979d0-d31d-4c57-8ba0-491aff4acaed"
+        src="https://app.powerbi.com/view?r=eyJrIjoiODEwM2RiNWUtZjc5ZS00NWVkLTk5ZDgtY2Y4YTViZjM2MzAzIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9"
         style={{
           width: '100%',
           height: '100%',
