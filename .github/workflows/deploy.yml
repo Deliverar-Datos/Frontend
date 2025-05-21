@@ -30,22 +30,24 @@ jobs:
            npm run build # O 'yarn build'. Esto generará los archivos estáticos en la carpeta 'build'
 
     - name: Zip Build Folder (Optional but recommended for large builds)
-      run: zip -r build.zip build # Empaqueta la carpeta 'build' para una transferencia más eficiente
+      run: |
+           cd frontend-bi
+           zip -r build.zip build # Empaqueta la carpeta 'build' para una transferencia más eficiente
 
-    - name: Deploy to Server via SSH
-      uses: appleboy/ssh-action@v1.0.0
+
+
+    - name: Upload build to EC2
+      uses: appleboy/scp-action@v0.1.4
       with:
-        host: ${{ secrets.SSH_HOST_FRONT }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22 # O el puerto SSH que uses si es diferente
-        script: |
+          host: ${{ secrets.SSH_HOST_FRONT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: frontend/build.zip # Cambia esta ruta al directorio donde se encuentra tu app React
+  
+          script: |     
+            unzip -o build.zip # Descomprime el archivo zip en el servidor
+            mv build/* /var/www/tu-app-react # Descomenta y ajusta esta línea si no usas zip
+            rm build.zip # Elimina el archivo zip para liberar espacio
+            sudo systemctl restart nginx.service # Reinicia el servicio de Nginx para aplicar los cambios
 
-          
-          unzip -o build.zip # Descomprime el archivo zip en el servidor
-          mv build/* /var/www/tu-app-react # Descomenta y ajusta esta línea si no usas zip
-          rm build.zip # Elimina el archivo zip para liberar espacio
-          
-          sudo systemctl restart nginx.service # Reinicia el servicio de Nginx para aplicar los cambios
-
-          echo "Deployment successful!"
+            echo "Deployment successful!"
