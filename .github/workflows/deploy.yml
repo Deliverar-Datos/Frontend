@@ -1,76 +1,39 @@
-name: Deploy React App via SCP and SSH
+name: SSH Git Pull
 
 on:
   push:
     branches:
-      - dev # Ejecuta el workflow cuando se haga push a la rama 'dev'
-  workflow_dispatch: # Permite ejecutar el workflow manualmente desde la UI de GitHub
+      - dev  # Ejecutar cuando haya un push en la rama 'dev2'
 
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest # El runner de GitHub Actions
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4 # Clona tu repositorio
+      # 1. Checkout del código
+      - name: Checkout del código
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22' # Usa la versión de Node.js que necesites para tu app React
+      # 2. Configurar la clave SSH
+      - name: Configurar la clave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-    - name: Install Dependencies
-      run: |
-        cd frontend-bi
-        npm install # O 'yarn install' si usas Yarn
+      # 3. Agregar el servidor al archivo de hosts conocidos
+      - name: Configurar Host SSH
+        run: |
+          ssh-keyscan -H ${{ secrets.SSH_HOST_FRONT }} >> ~/.ssh/known_hosts
 
-    - name: Build React App
-      run: |
-        cd frontend-bi
-        npm run build # Esto generará los archivos estáticos en la carpeta 'build' dentro de 'frontend-bi'
-
-    - name: Zip Build Folder
-      run: |
-        cd frontend-bi
-        zip -r build.zip build/ # Empaqueta la carpeta build
-
-    - name: Write SSH Key to File
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-        chmod 600 private_key.pem
-
-    - name: Debug SSH Connection
-      run: |
-        echo "Testing SSH connection..."
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} 'echo "SSH Connection Successful!"'
-
-    - name: Upload build to EC2
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.SSH_HOST_FRONT }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }} # ⚠️ se usa como string dentro del contenedor
-        port: 22
-        source: "frontend-bi/build.zip"
-        target: "/tmp"
-
-    - name: Execute Deploy Commands on EC2
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SSH_HOST_FRONT }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key_path: private_key.pem # ✅ se usa el archivo ya creado
-        port: 22
-        script: |
-          cd /var/www/tu-app-react # <-- ¡IMPORTANTE! Ajustá esta ruta a la de tu servidor
-          sudo unzip -o /tmp/build.zip -d .
-          # sudo mv build/* .
-          # sudo rm -r build
-          sudo rm /tmp/build.zip
-          sudo systemctl restart nginx.service
-          echo "Deployment successful!"
-
-    - name: Clean up SSH Key
-      if: always()
-      run: |
-        rm -f private_key.pem
+      # 4. Conectarse al servidor, cambiar de directorio y hacer git pull
+      - name: Conectar al servidor y hacer git pull
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} << 'EOF'
+            cd 
+            git pull
+            cd ./Frontend/frontend-bi
+             
+            
+            echo "Se Actualizo la Aplicacion"
+          EOF
