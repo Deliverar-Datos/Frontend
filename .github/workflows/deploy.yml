@@ -37,9 +37,12 @@ jobs:
            zip -r build.zip build/
 
     - name: Debug SSH Connection
+      # Verifica la conexión SSH usando la clave guardada en los secrets
       run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
         echo "Testing SSH connection..."
-        ssh -v -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} 'echo "SSH Connection Successful!"'     
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} 'echo "SSH Connection Successful!"'
 
     - name: Upload build to EC2
       uses: appleboy/scp-action@v0.1.4 # <--- ¡Esta acción es solo para COPIAR ARCHIVOS!
@@ -83,3 +86,8 @@ jobs:
           sudo systemctl restart nginx.service
 
           echo "Deployment successful!"
+
+    - name: Clean up SSH Key
+      if: always()
+      run: |
+        rm -f private_key.pem
