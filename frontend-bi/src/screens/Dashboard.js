@@ -2,7 +2,7 @@ import React from 'react';
 
 function Dashboard() {
   const isAuth = localStorage.getItem('auth');
-  const role = localStorage.getItem('role');
+//  const role = localStorage.getItem('role');
 
   if (!isAuth) {
     window.location.href = '/';
