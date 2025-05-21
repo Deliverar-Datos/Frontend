@@ -1,0 +1,49 @@
+name: Deploy React App via SSH
+
+on:
+  push:
+    branches:
+      - main # Ejecuta el workflow cuando se haga push a la rama 'main'
+  workflow_dispatch: # Permite ejecutar el workflow manualmente desde la UI de GitHub
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest # El runner de GitHub Actions
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4 # Clona tu repositorio
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22' # Usa la versión de Node.js que necesites para tu app React
+    - name: aplicación React
+      run: cd frontend-bi # Cambia al directorio de tu aplicación React
+
+    - name: Install Dependencies
+      run: npm install # O 'yarn install' si usas Yarn
+
+    - name: Build React App
+      run: npm run build # O 'yarn build'. Esto generará los archivos estáticos en la carpeta 'build'
+
+    - name: Zip Build Folder (Optional but recommended for large builds)
+      run: zip -r build.zip build # Empaqueta la carpeta 'build' para una transferencia más eficiente
+
+    - name: Deploy to Server via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST_FRONT }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22 # O el puerto SSH que uses si es diferente
+        script: |
+
+          
+          unzip -o build.zip # Descomprime el archivo zip en el servidor
+          mv build/* /var/www/tu-app-react # Descomenta y ajusta esta línea si no usas zip
+          rm build.zip # Elimina el archivo zip para liberar espacio
+          
+          sudo systemctl restart nginx.service # Reinicia el servicio de Nginx para aplicar los cambios
+
+          echo "Deployment successful!"
