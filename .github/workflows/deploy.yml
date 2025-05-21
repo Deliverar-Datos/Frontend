@@ -36,6 +36,11 @@ jobs:
            cd frontend-bi
            zip -r build.zip build/
 
+    - name: Debug SSH Connection
+      run: |
+        echo "Testing SSH connection..."
+        ssh -v -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} 'echo "SSH Connection Successful!"'     
+
     - name: Upload build to EC2
       uses: appleboy/scp-action@v0.1.4 # <--- ¡Esta acción es solo para COPIAR ARCHIVOS!
       with:
