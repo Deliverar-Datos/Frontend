@@ -33,7 +33,14 @@ jobs:
             cd 
             git clone https://github.com/Deliverar-Datos/Frontend.git
             cd ./Frontend/frontend-bi
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+            export NVM_DIR="$([ -s "$HOME/.nvm/nvm.sh" ] && echo "$HOME/.nvm" || printf "nvm no found")"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash completion
+
+            nvm install "$NODE_VERSION"
             nvm use "$NODE_VERSION"
+            nvm alias default "$NODE_VERSION"
             npm install
             npm run build
             cp -r ./build/* /var/www/mi-app-react/       
