@@ -1,9 +1,9 @@
-name: Deploy React App via SSH
+name: Deploy React App via SCP and SSH
 
 on:
   push:
     branches:
-      - dev # Ejecuta el workflow cuando se haga push a la rama 'main'
+      - dev # Ejecuta el workflow cuando se haga push a la rama 'dev'
   workflow_dispatch: # Permite ejecutar el workflow manualmente desde la UI de GitHub
 
 jobs:
@@ -27,27 +27,54 @@ jobs:
     - name: Build React App
       run: |
            cd frontend-bi
-           npm run build # O 'yarn build'. Esto generará los archivos estáticos en la carpeta 'build'
+           npm run build # Esto generará los archivos estáticos en la carpeta 'build' dentro de 'frontend-bi'
 
-    - name: Zip Build Folder (Optional but recommended for large builds)
+    - name: Zip Build Folder
+      # Empaqueta la carpeta 'build' que está dentro de 'frontend-bi'
+      # El path de salida del zip será 'frontend-bi/build.zip' en el runner
       run: |
            cd frontend-bi
-           zip -r build.zip build # Empaqueta la carpeta 'build' para una transferencia más eficiente
-
-
+           zip -r build.zip build/
 
     - name: Upload build to EC2
-      uses: appleboy/scp-action@v0.1.4
+      uses: appleboy/scp-action@v0.1.4 # <--- ¡Esta acción es solo para COPIAR ARCHIVOS!
       with:
-          host: ${{ secrets.SSH_HOST_FRONT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: frontend/build.zip # Cambia esta ruta al directorio donde se encuentra tu app React
-  
-          script: |     
-            unzip -o build.zip # Descomprime el archivo zip en el servidor
-            mv build/* /var/www/tu-app-react # Descomenta y ajusta esta línea si no usas zip
-            rm build.zip # Elimina el archivo zip para liberar espacio
-            sudo systemctl restart nginx.service # Reinicia el servicio de Nginx para aplicar los cambios
+        host: ${{ secrets.SSH_HOST_FRONT }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        # La ruta del archivo zip en el runner de GitHub Actions
+        source: "frontend-bi/build.zip"
+        # El directorio temporal donde se copiará el zip en el servidor
+        target: "/tmp"
 
-            echo "Deployment successful!"
+    - name: Execute Deploy Commands on EC2
+      uses: appleboy/ssh-action@v1.0.0 # <--- ¡Esta acción es para EJECUTAR COMANDOS SSH!
+      with:
+        host: ${{ secrets.SSH_HOST_FRONT }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          # Navega al directorio de tu aplicación en el servidor
+          cd /var/www/tu-app-react # <-- ¡IMPORTANTE! Ajusta esta ruta a la de tu servidor
+
+          # Descomprime el archivo zip que se copió a /tmp en el paso anterior
+          # El -o sobrescribe archivos existentes sin preguntar
+          sudo unzip -o /tmp/build.zip -d . # Descomprime los contenidos del zip en el directorio actual (tu-app-react)
+
+          # Opcional: Si el zip descomprime a una subcarpeta 'build' dentro de tu-app-react,
+          # puedes mover su contenido directamente a la raíz de tu-app-react.
+          # Si el zip ya descomprime directamente los archivos en la raíz, omite esto.
+          # Por ejemplo: si el zip contiene 'build/index.html', el unzip lo pondrá en './build/index.html'.
+          # Si quieres que 'index.html' quede en './index.html', necesitarías:
+          # sudo mv build/* .
+          # sudo rm -r build
+
+          # Elimina el archivo zip temporal del servidor para liberar espacio
+          sudo rm /tmp/build.zip
+
+          # Reinicia el servicio de Nginx para que sirva la nueva versión de la app
+          sudo systemctl restart nginx.service
+
+          echo "Deployment successful!"
