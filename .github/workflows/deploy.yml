@@ -21,70 +21,53 @@ jobs:
 
     - name: Install Dependencies
       run: |
-           cd frontend-bi
-           npm install # O 'yarn install' si usas Yarn
+        cd frontend-bi
+        npm install # O 'yarn install' si usas Yarn
 
     - name: Build React App
       run: |
-           cd frontend-bi
-           npm run build # Esto generará los archivos estáticos en la carpeta 'build' dentro de 'frontend-bi'
+        cd frontend-bi
+        npm run build # Esto generará los archivos estáticos en la carpeta 'build' dentro de 'frontend-bi'
 
     - name: Zip Build Folder
-      # Empaqueta la carpeta 'build' que está dentro de 'frontend-bi'
-      # El path de salida del zip será 'frontend-bi/build.zip' en el runner
       run: |
-           cd frontend-bi
-           zip -r build.zip build/
+        cd frontend-bi
+        zip -r build.zip build/ # Empaqueta la carpeta build
 
-    - name: Debug SSH Connection
-      # Verifica la conexión SSH usando la clave guardada en los secrets
+    - name: Write SSH Key to File
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
         chmod 600 private_key.pem
+
+    - name: Debug SSH Connection
+      run: |
         echo "Testing SSH connection..."
         ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} 'echo "SSH Connection Successful!"'
 
     - name: Upload build to EC2
-      uses: appleboy/scp-action@v0.1.4 # <--- ¡Esta acción es solo para COPIAR ARCHIVOS!
+      uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.SSH_HOST_FRONT }}
         username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: private_key.pem
         port: 22
-        # La ruta del archivo zip en el runner de GitHub Actions
         source: "frontend-bi/build.zip"
-        # El directorio temporal donde se copiará el zip en el servidor
         target: "/tmp"
 
     - name: Execute Deploy Commands on EC2
-      uses: appleboy/ssh-action@v1.0.0 # <--- ¡Esta acción es para EJECUTAR COMANDOS SSH!
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.SSH_HOST_FRONT }}
         username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: private_key.pem
         port: 22
         script: |
-          # Navega al directorio de tu aplicación en el servidor
-          cd /var/www/tu-app-react # <-- ¡IMPORTANTE! Ajusta esta ruta a la de tu servidor
-
-          # Descomprime el archivo zip que se copió a /tmp en el paso anterior
-          # El -o sobrescribe archivos existentes sin preguntar
-          sudo unzip -o /tmp/build.zip -d . # Descomprime los contenidos del zip en el directorio actual (tu-app-react)
-
-          # Opcional: Si el zip descomprime a una subcarpeta 'build' dentro de tu-app-react,
-          # puedes mover su contenido directamente a la raíz de tu-app-react.
-          # Si el zip ya descomprime directamente los archivos en la raíz, omite esto.
-          # Por ejemplo: si el zip contiene 'build/index.html', el unzip lo pondrá en './build/index.html'.
-          # Si quieres que 'index.html' quede en './index.html', necesitarías:
+          cd /var/www/tu-app-react # <-- ¡IMPORTANTE! Ajustá esta ruta a la de tu servidor
+          sudo unzip -o /tmp/build.zip -d .
           # sudo mv build/* .
           # sudo rm -r build
-
-          # Elimina el archivo zip temporal del servidor para liberar espacio
           sudo rm /tmp/build.zip
-
-          # Reinicia el servicio de Nginx para que sirva la nueva versión de la app
           sudo systemctl restart nginx.service
-
           echo "Deployment successful!"
 
     - name: Clean up SSH Key
