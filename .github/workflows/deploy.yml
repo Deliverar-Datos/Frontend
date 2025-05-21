@@ -3,7 +3,7 @@ name: SSH Git Pull
 on:
   push:
     branches:
-      - dev  # Ejecutar cuando haya un push en la rama 'dev2'
+      - dev # Ejecutar cuando haya un push en la rama 'dev2'
 
 jobs:
   deploy:
@@ -27,19 +27,29 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST_FRONT }} >> ~/.ssh/known_hosts
 
       # 4. Conectarse al servidor, cambiar de directorio y hacer git pull
-      - name: Conectar al servidor y hacer git pull
+      - name: Conectar al servidor y desplegar Frontend
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_FRONT }} << 'EOF'
-            cd 
-            git clone https://github.com/Deliverar-Datos/Frontend.git
+            cd /home/${SSH_USERNAME}
+
+            if [ ! -d "./Frontend" ]; then
+              git clone https://github.com/Deliverar-Datos/Frontend.git
+            fi
+
             cd ./Frontend/frontend-bi
+            git pull
+
+            export NVM_DIR="\$HOME/.nvm"
+            source "\$NVM_DIR/nvm.sh"
+            nvm use 22
+
             npm install
             npm run build
-            cp -r ./build/* /var/www/mi-app-react/       
+
+            sudo cp -r ./build/* /var/www/mi-app-react/
             ls -la /var/www/mi-app-react/
-            echo "Se copio la aplicacion"
-                
-            echo "Se Actualizo la Aplicacion"
+
+            echo "Se copió la aplicación"
             sudo systemctl restart nginx.service
-            echo "Se reinicio el servicio de Nginx" 
+            echo "Se reinició el servicio de Nginx"
           EOF
