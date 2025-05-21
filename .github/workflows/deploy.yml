@@ -3,7 +3,7 @@ name: Deploy React App via SSH
 on:
   push:
     branches:
-      - main # Ejecuta el workflow cuando se haga push a la rama 'main'
+      - dev # Ejecuta el workflow cuando se haga push a la rama 'main'
   workflow_dispatch: # Permite ejecutar el workflow manualmente desde la UI de GitHub
 
 jobs:
