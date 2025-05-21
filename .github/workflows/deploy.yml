@@ -33,7 +33,10 @@ jobs:
             cd 
             git pull
             cd ./Frontend/frontend-bi
-             
-            
+            npm install
+            npm run build
+            cp -r ./build/* /var/www/mi-app-react/           
             echo "Se Actualizo la Aplicacion"
+            sudo systemctl restart nginx.service
+            echo "Se reinicio el servicio de Nginx" 
           EOF
