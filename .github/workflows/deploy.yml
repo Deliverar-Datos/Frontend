@@ -18,14 +18,16 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22' # Usa la versión de Node.js que necesites para tu app React
-    - name: aplicación React
-      run: cd frontend-bi # Cambia al directorio de tu aplicación React
 
     - name: Install Dependencies
-      run: npm install # O 'yarn install' si usas Yarn
+      run: |
+           cd frontend-bi
+           npm install # O 'yarn install' si usas Yarn
 
     - name: Build React App
-      run: npm run build # O 'yarn build'. Esto generará los archivos estáticos en la carpeta 'build'
+      run: |
+           cd frontend-bi
+           npm run build # O 'yarn build'. Esto generará los archivos estáticos en la carpeta 'build'
 
     - name: Zip Build Folder (Optional but recommended for large builds)
       run: zip -r build.zip build # Empaqueta la carpeta 'build' para una transferencia más eficiente
