@@ -5,12 +5,7 @@ const SummaryCards = () => {
     <section className="grid grid-cols-3 gap-4 mb-8">
       <div className="bg-white shadow rounded p-4">
   <div className="w-full aspect-[4/3] overflow-hidden rounded">
-    <iframe
-      title="test1"
-      src="https://app.powerbi.com/view?r=eyJrIjoiYmFlN2ZiOTUtYmRmYy00NjQ1LWEwMmMtODk4NjMyODVmMTVhIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9&rs:embed=true&navContentPaneEnabled=false&filterPaneEnabled=false"
-      className="w-full h-full border-0"
-      allowFullScreen
-    />
+    <iframe title="Gráfico Métodos de pago" width="1024" height="1060" src="https://app.powerbi.com/view?r=eyJrIjoiNjM1MjMwYzAtODc0Yy00OTg5LTg3MzQtZjYzOGYyNzEwMDFhIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9" frameborder="0" allowFullScreen="true"></iframe>
   </div>
 </div>
       <div className="bg-white shadow rounded p-4">

@@ -6,7 +6,7 @@ const DeliveryOverview = () => {
 
   const iframeSrc = isAdmin
     ? 'https://app.powerbi.com/view?r=eyJrIjoiN2YxZTY3MWEtYmM1My00NDU2LTlmM2UtNDE4ODUyMmExODZjIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9&pageName=13fb83696349aa84a6b2' // Dashboard de admin
-    : 'https://app.powerbi.com/view?r=eyJrIjoiN2YxZTY3MWEtYmM1My00NDU2LTlmM2UtNDE4ODUyMmExODZjIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9&pageName=13fb83696349aa84a6b2'; // Dashboard de user
+    : 'https://app.powerbi.com/view?r=eyJrIjoiZmQwNTg4ZTAtMGM5ZC00ZDE3LTk0OWEtZTZmNmRhMDMyNGY0IiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9'; // Dashboard de user
 
   return (
     <section className="bg-white shadow rounded p-4 mb-8">
