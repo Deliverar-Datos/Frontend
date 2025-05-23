@@ -24,7 +24,7 @@ const App = () => {
           <>
             <SummaryCards />
             <DeliveryOverview />
-            <FleetAnalytics />
+          {/*<FleetAnalytics /> */}
           </>
         ) : user === 'ceo' ? (
           <CEODashboard />

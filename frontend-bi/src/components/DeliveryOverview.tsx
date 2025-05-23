@@ -5,8 +5,8 @@ const DeliveryOverview = () => {
   const isAdmin = user === 'admin';
 
   const iframeSrc = isAdmin
-    ? 'https://app.powerbi.com/view?r=eyJrIjoiODEwM2RiNWUtZjc5ZS00NWVkLTk5ZDgtY2Y4YTViZjM2MzAzIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9' // Dashboard de admin
-    : 'https://app.powerbi.com/view?r=eyJrIjoiYmFlN2ZiOTUtYmRmYy00NjQ1LWEwMmMtODk4NjMyODVmMTVhIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9'; // Dashboard de user
+    ? 'https://app.powerbi.com/view?r=eyJrIjoiN2YxZTY3MWEtYmM1My00NDU2LTlmM2UtNDE4ODUyMmExODZjIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9&pageName=13fb83696349aa84a6b2' // Dashboard de admin
+    : 'https://app.powerbi.com/view?r=eyJrIjoiN2YxZTY3MWEtYmM1My00NDU2LTlmM2UtNDE4ODUyMmExODZjIiwidCI6IjdjMTcwZTA1LWQxODEtNDY0OS1hNjZjLTUzYTM1NzUzZGE1NCIsImMiOjR9&pageName=13fb83696349aa84a6b2'; // Dashboard de user
 
   return (
     <section className="bg-white shadow rounded p-4 mb-8">
@@ -21,7 +21,7 @@ const DeliveryOverview = () => {
           />
         </div>
 
-        {isAdmin && (
+        {/*{isAdmin && (
           <div className="flex justify-center gap-8">
             <div>
               <p className="font-bold text-xl">1,248</p>
@@ -40,7 +40,7 @@ const DeliveryOverview = () => {
               <p className="text-sm text-gray-500">Customer Rating</p>
             </div>
           </div>
-        )}
+        )}*/}
       </div>
     </section>
   );

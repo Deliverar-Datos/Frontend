@@ -59,23 +59,16 @@ const Sidebar = () => {
               <a href="#" className="hover:bg-hoverItem rounded p-2 flex items-center gap-2">
                 <FaChartLine /> Performance
               </a>
-              <a href="#" className="hover:bg-hoverItem rounded p-2 flex items-center gap-2">
-                <FaChartPie /> Analytics
-              </a>
-              <a href="#" className="hover:bg-hoverItem rounded p-2 flex items-center gap-2">
-                <FaTruck /> Fleet
-              </a>
-              <a href="#" className="hover:bg-hoverItem rounded p-2 flex items-center gap-2">
-                <FaUsers /> Team
-              </a>
-
+              
+              
+              
               {/* Settings */}
-              <div className="mt-6">
+              {/*<div className="mt-6">
                 <div className="uppercase text-gray-300 text-xs font-semibold px-2 mb-2">Settings</div>
                 <a href="#" className="hover:bg-hoverItem rounded p-2 flex items-center gap-2">
                   <FaCog /> Settings
                 </a>
-              </div>
+              </div> */}
             </>
           )}
         </nav>

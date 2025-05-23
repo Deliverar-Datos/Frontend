@@ -39,6 +39,7 @@ const TopBar: React.FC<TopBarProps> = ({
       {/* Derecha: búsqueda + botón */}
       {(showSearch || showHelpButton) && (
         <div className="flex items-center gap-2">
+          {/* 
           {showSearch && (
             <div className="relative">
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral" />
@@ -49,6 +50,7 @@ const TopBar: React.FC<TopBarProps> = ({
               />
             </div>
           )}
+          */}
           {showHelpButton && (
             <button
               onClick={() => navigate('/help')}
