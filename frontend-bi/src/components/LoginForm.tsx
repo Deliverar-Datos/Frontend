@@ -14,6 +14,10 @@ const LoginForm = () => {
       localStorage.setItem('authenticated', 'true');
       localStorage.setItem('user', 'admin');
       navigate('/');
+    } else if (username === 'ceo' && password === '1234') {
+      localStorage.setItem('authenticated', 'true');
+      localStorage.setItem('user', 'ceo');
+      navigate('/');
     } else if (username === 'user' && password === '1234') {
       localStorage.setItem('authenticated', 'true');
       localStorage.setItem('user', 'user');

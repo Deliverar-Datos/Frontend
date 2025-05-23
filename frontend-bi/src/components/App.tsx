@@ -4,6 +4,7 @@ import TopBar from './TopBar';
 import SummaryCards from './SummaryCards';
 import DeliveryOverview from './DeliveryOverview';
 import FleetAnalytics from './FleetAnalytics';
+import CEODashboard from './CEODashboard';
 
 const App = () => {
   const user = localStorage.getItem('user');
@@ -13,7 +14,7 @@ const App = () => {
       <Sidebar />
       <main className="flex-1 bg-gray-100 p-8">
         <TopBar
-          title="Dashboard"
+          title={user === 'ceo' ? 'Dashboard Ejecutivo' : 'Dashboard'}
           icon="dashboard"
           showSearch={true}
           showHelpButton={true}
@@ -25,6 +26,8 @@ const App = () => {
             <DeliveryOverview />
             <FleetAnalytics />
           </>
+        ) : user === 'ceo' ? (
+          <CEODashboard />
         ) : (
           <>
             <DeliveryOverview />
