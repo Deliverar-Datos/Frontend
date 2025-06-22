@@ -10,21 +10,15 @@ const LoginForm = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username === 'admin' && password === '1234') {
+     
       localStorage.setItem('authenticated', 'true');
       localStorage.setItem('user', 'admin');
       navigate('/');
-    } else if (username === 'ceo' && password === '1234') {
-      localStorage.setItem('authenticated', 'true');
-      localStorage.setItem('user', 'ceo');
-      navigate('/');
-    } else if (username === 'user' && password === '1234') {
-      localStorage.setItem('authenticated', 'true');
-      localStorage.setItem('user', 'user');
-      navigate('/');
-    } else {
-      toast.error('Credenciales inválidas');
-    }
+};    
+  
+
+  const handleTeamsRedirect = () => {
+    window.location.href = 'https://trial-8197528.okta.com/home/trial-8197528_dashboardbi_1/0oasjsvovspN4ZDDc697/alnsjt174iRpdP7P8697';
   };
 
   return (
@@ -53,11 +47,18 @@ const LoginForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-primary hover:bg-secondary text-white py-2 rounded"
+          className="w-[1px] h-[1px] p-0 m-0 overflow-hidden absolute"
         >
           Iniciar Sesión
         </button>
       </form>
+
+      <button
+        onClick={handleTeamsRedirect}
+        className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+      >
+        Okta
+      </button>
     </div>
   );
 };
