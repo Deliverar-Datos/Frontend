@@ -1,66 +1,45 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiLayout, FiSearch, FiHelpCircle } from 'react-icons/fi';
+import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 
-interface TopBarProps {
-  title: string;
-  icon: 'dashboard' | 'help';
-  showSearch?: boolean;
-  showHelpButton?: boolean;
-}
-
-const TopBar: React.FC<TopBarProps> = ({
-  title,
-  icon,
-  showSearch = true,
-  showHelpButton = true
-}) => {
+const TopBar = () => {
   const navigate = useNavigate();
+  const user = localStorage.getItem('user') || '';
 
-  const renderIcon = () => {
-    switch (icon) {
-      case 'dashboard':
-        return <FiLayout className="text-xl text-neutral" />
-      case 'help':
-        return <FiHelpCircle className="text-xl text-neutral" />;
-      default:
-        return null;
-    }
+  const userInfo = {
+    name: user.split('@')[0] || 'Usuario',
+    email: user,
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authenticated');
+    localStorage.removeItem('user');
+    navigate('/login');
   };
 
   return (
-    <header className="flex justify-between items-center mb-8">
-      {/* Izquierda: ícono + título */}
-      <div className="flex items-center gap-2 text-neutral text-lg font-semibold">
-        {renderIcon()}
-        <span>{title}</span>
+    <header className="w-full bg-dark text-white px-6 py-3 flex items-center justify-between shadow-md">
+      <div className="text-2xl font-bold">
+        <span className="text-white">Deliver</span>
+        <span className="text-primary">.ar</span>
       </div>
 
-      {/* Derecha: búsqueda + botón */}
-      {(showSearch || showHelpButton) && (
-        <div className="flex items-center gap-2">
-          {/* 
-          {showSearch && (
-            <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="pl-10 pr-4 py-2 border border-neutral rounded w-64 focus:outline-none"
-              />
-            </div>
-          )}
-          */}
-          {showHelpButton && (
-            <button
-              onClick={() => navigate('/help')}
-              className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded"
-            >
-              Help Center
-            </button>
-          )}
+      <div className="flex gap-4 items-stretch">
+        <div className="flex items-center gap-2 bg-hoverItem px-4 py-2 rounded min-w-[200px]">
+          <FaUserCircle className="text-xl text-white" />
+          <div className="text-sm">
+            <div className="font-medium">{userInfo.name}</div>
+            <div className="text-xs text-gray-200">{userInfo.email}</div>
+          </div>
         </div>
-      )}
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-error hover:bg-red-700 px-4 py-2 rounded text-sm font-semibold"
+        >
+          <FaSignOutAlt /> Salir
+        </button>
+      </div>
     </header>
   );
 };

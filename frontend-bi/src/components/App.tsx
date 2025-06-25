@@ -1,38 +1,13 @@
 import React from 'react';
-import Sidebar from './Sidebar';
 import TopBar from './TopBar';
-import SummaryCards from './SummaryCards';
-import DeliveryOverview from './DeliveryOverview';
-import FleetAnalytics from './FleetAnalytics';
-import CEODashboard from './CEODashboard';
+import DashboardSelector from './dashboards/DashboardSelector';
 
 const App = () => {
-  const user = localStorage.getItem('user');
-
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
+    <div className="min-h-screen flex flex-col">
+      <TopBar />
       <main className="flex-1 bg-gray-100 p-8">
-        <TopBar
-          title={user === 'ceo' ? 'Dashboard Ejecutivo' : 'Dashboard'}
-          icon="dashboard"
-          showSearch={true}
-          showHelpButton={true}
-        />
-
-        {user === 'admin' ? (
-          <>
-            <SummaryCards />
-            <DeliveryOverview />
-          {/*<FleetAnalytics /> */}
-          </>
-        ) : user === 'ceo' ? (
-          <CEODashboard />
-        ) : (
-          <>
-            <DeliveryOverview />
-          </>
-        )}
+        <DashboardSelector />
       </main>
     </div>
   );

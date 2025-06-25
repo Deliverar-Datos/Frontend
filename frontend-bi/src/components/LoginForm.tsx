@@ -12,7 +12,7 @@ const LoginForm = () => {
 
      
       localStorage.setItem('authenticated', 'true');
-      localStorage.setItem('user', 'admin');
+      localStorage.setItem('user', username);
       navigate('/');
 };    
   
@@ -23,6 +23,13 @@ const LoginForm = () => {
 
   return (
     <div className="w-full max-w-sm bg-white p-8 rounded shadow-md">
+      <div className="flex justify-center mb-4">
+        <img
+          src="https://www.schgroup.com/wp-content/uploads/2024/03/Power-BI-icon.png"
+          alt="Logo o Imagen"
+          className="h-20 w-auto object-contain"
+        />
+      </div>
       <h2 className="text-2xl font-semibold text-neutral mb-6 text-center">Iniciar Sesión</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
@@ -32,7 +39,7 @@ const LoginForm = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full border border-neutral rounded px-3 py-2 focus:outline-none"
-            placeholder="ingrese su usuario"
+            placeholder="Ingrese su usuario"
           />
         </div>
         <div>
@@ -42,7 +49,7 @@ const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-neutral rounded px-3 py-2 focus:outline-none"
-            placeholder="ingrese su password"
+            placeholder="Ingrese su contraseña"
           />
         </div>
         <button
@@ -57,7 +64,7 @@ const LoginForm = () => {
         onClick={handleTeamsRedirect}
         className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
       >
-        Okta
+        Iniciar Sesión con Okta
       </button>
     </div>
   );
