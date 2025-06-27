@@ -1,5 +1,5 @@
 export default {
-  role: 'backoffice',
+  role: 'guild-backoffice',
   rows: [
     {
       cards: [
