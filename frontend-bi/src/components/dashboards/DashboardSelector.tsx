@@ -29,7 +29,7 @@ const DashboardSelector = () => {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const response = await axios.get('http://back-bi.deliver.ar:3000/auth/role', {
+        const response = await axios.get('https://back-bi.deliver.ar:3000/auth/role', {
           params: { email: userEmail },
         });
         setUserRol(response.data.role); // Asegurate que la API responde { role: "admin" } o similar
