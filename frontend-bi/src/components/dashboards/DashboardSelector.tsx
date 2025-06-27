@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { dashboardsByUser } from '../../config/dashboards/index';
 
 const colSpanClasses: Record<number, string> = {
@@ -22,8 +23,33 @@ const getColSpanClass = (colSpan: number) => {
 
 const DashboardSelector = () => {
   const userEmail = localStorage.getItem('user');
-  const userDash = dashboardsByUser.find((u) => u.email === userEmail);
+  const [userRol, setUserRol] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get('http://back-bi.deliver.ar:3000/auth/role', {
+          params: { email: userEmail },
+        });
+        setUserRol(response.data.role); // Asegurate que la API responde { role: "admin" } o similar
+        localStorage.setItem('rol', response.data.role);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userEmail) {
+      fetchUserRole();
+    } else {
+      setLoading(false);
+    }
+  }, [userEmail]);
+  if (loading) return <div>Cargando dashboards...</div>;
+  if (!userRol) return <div className="text-red-600">No se pudo obtener el rol del usuario.</div>;
+  const userDash = dashboardsByUser.find((u) => u.role === userRol);
   if (!userDash || !userDash.rows) {
     return <div className="text-red-600">No se encontraron dashboards configurados.</div>;
   }
@@ -37,7 +63,7 @@ const DashboardSelector = () => {
               key={idx}
               className={`${getColSpanClass(card.colSpan)} bg-white shadow rounded p-4`}
             >
-              <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+              <div className="relative w-full" style={{ height: '800px' }}>
                 <iframe
                   src={card.url}
                   allowFullScreen

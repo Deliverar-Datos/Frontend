@@ -1,4 +1,4 @@
-import admin from './admin';
+import guildmarketplace from './guild-marketplace';
 import ceo from './ceo';
 
-export const dashboardsByUser = [admin, ceo];
+export const dashboardsByUser = [guildmarketplace, ceo];

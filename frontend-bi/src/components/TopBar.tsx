@@ -7,7 +7,7 @@ const TopBar = () => {
   const user = localStorage.getItem('user') || '';
 
   const userInfo = {
-    name: user.split('@')[0] || 'Usuario',
+    name: localStorage.getItem('rol'),// || user.split('@')[0],
     email: user,
   };
 

@@ -1,7 +1,5 @@
 export default {
-  email: 'ceo@deliverar.com',
   role: 'ceo',
-  layout: 'grid',
   rows: [
     {
       cards: [
